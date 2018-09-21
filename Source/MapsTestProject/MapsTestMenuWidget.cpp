@@ -6,6 +6,12 @@
 #include "GoogleMapsViewBlueprintLibrary.h"
 #include "MarkerOptions.h "
 
+void UMapsTestMenuWidget::SetGoogleAPIKey()
+{
+	// for IOS Google Maps API key should be provide explicitly
+	UGoogleMapsViewBlueprintLibrary::SetAPIKey("YOUR_API_KEY_HERE");
+}
+
 void UMapsTestMenuWidget::HandleCreateMapButtonClick()
 {
 	if (IsMapViewExist)
@@ -89,7 +95,7 @@ FGoogleMapOptions UMapsTestMenuWidget::InitMapOptions()
 {
 	FGoogleMapOptions GoogleMapOtions;
 
-	GoogleMapOtions.AmbientEnabled = false;
+	//GoogleMapOtions.AmbientEnabled = false;
 
 	// Camera position
 	GoogleMapOtions.CameraPosition.Target = FLatLng{ 52.49f, 13.39f };
@@ -165,14 +171,21 @@ void UMapsTestMenuWidget::OnMapViewClick(FLatLng latLng)
 
 	FMarkerOptions MarkerOptions;
 
-	MarkerOptions.Visible = true;
+	// Currently all MarkerOptions fields should be initialized explicitly (will be fixed if future releases)
+
+	MarkerOptions.Alpha = 1.0f;
 	MarkerOptions.AnchorU = 0.5f;
 	MarkerOptions.AnchorV = 1.0f;
 	MarkerOptions.InfoWindowAnchorU = 0.5f;
-	MarkerOptions.InfoWindowAnchorV = 1.0f;
+	MarkerOptions.InfoWindowAnchorV = 0.0f;
+	MarkerOptions.Draggable = false;
+	MarkerOptions.Flat = false;
 	MarkerOptions.Position = latLng;
+	MarkerOptions.Rotation = 0.0f;
 	MarkerOptions.Title = "Title";
 	MarkerOptions.Snippet = "Description";
+	MarkerOptions.Visible = true;
+	MarkerOptions.ZIndex = 0.0f;
 
 	LastAddedMarker = MapView->AddMarker(MarkerOptions);
 }
