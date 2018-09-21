@@ -4,6 +4,7 @@
 #include "Blueprint/WidgetTree.h"
 #include "Blueprint/SlateBlueprintLibrary.h"
 #include "GoogleMapsViewBlueprintLibrary.h"
+#include "MarkerOptions.h "
 
 void UMapsTestMenuWidget::HandleCreateMapButtonClick()
 {
@@ -23,6 +24,7 @@ void UMapsTestMenuWidget::HandleCreateMapButtonClick()
 
 	// sign up for map view events
 	MapView->GetCallbackProxy()->OnMapReadyDynamicDelegate.AddDynamic(this, &UMapsTestMenuWidget::OnMapViewReady);
+	MapView->GetCallbackProxy()->OnMapClickDynamicDelegate.AddDynamic(this, &UMapsTestMenuWidget::OnMapViewClick);
 
 	auto MapViewArea = WidgetTree->FindWidget(FName("MapViewArea"));
 	if (MapViewArea)
@@ -66,6 +68,21 @@ void UMapsTestMenuWidget::HandleDismissMapButtonClick()
 
 	// reset map view flag
 	IsMapViewExist = false;
+}
+
+void UMapsTestMenuWidget::HandleRemoveMarkerButtonClick()
+{
+	if (!MapView.GetObject()->IsValidLowLevel())
+	{
+		return;
+	}
+
+	if (!LastAddedMarker.GetObject()->IsValidLowLevel())
+	{
+		return;
+	}
+
+	LastAddedMarker->Remove();
 }
 
 FGoogleMapOptions UMapsTestMenuWidget::InitMapOptions()
@@ -134,4 +151,28 @@ void UMapsTestMenuWidget::OnMapViewReady()
 {
 	// Check logs to make sure that this callback works
 	UE_LOG(LogTemp, Warning, TEXT("GOOGLEMAPSVIEW => MAP VIEW READY CALLBACK"));
+}
+
+void UMapsTestMenuWidget::OnMapViewClick(FLatLng latLng)
+{
+	// Check logs to make sure that this callback works
+	UE_LOG(LogTemp, Warning, TEXT("GOOGLEMAPSVIEW => MAP VIEW CLICK CALLBACK"));
+
+	if (!MapView.GetObject()->IsValidLowLevel())
+	{
+		return;
+	}
+
+	FMarkerOptions MarkerOptions;
+
+	MarkerOptions.Visible = true;
+	MarkerOptions.AnchorU = 0.5f;
+	MarkerOptions.AnchorV = 1.0f;
+	MarkerOptions.InfoWindowAnchorU = 0.5f;
+	MarkerOptions.InfoWindowAnchorV = 1.0f;
+	MarkerOptions.Position = latLng;
+	MarkerOptions.Title = "Title";
+	MarkerOptions.Snippet = "Description";
+
+	LastAddedMarker = MapView->AddMarker(MarkerOptions);
 }

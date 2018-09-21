@@ -5,7 +5,9 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Interface/GoogleMapsViewInterface.h"
+#include "Interface/MarkerInterface.h"
 #include "GoogleMapOptions.h"
+#include "LatLng.h"
 #include "MapsTestMenuWidget.generated.h"
 
 UCLASS()
@@ -27,6 +29,9 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "GoogleMapsView")
 	void HandleDismissMapButtonClick();
 
+	UFUNCTION(BlueprintCallable, Category = "GoogleMapsView")
+	void HandleRemoveMarkerButtonClick();
+
 private:
 
 	/**
@@ -43,6 +48,9 @@ private:
 	/** Reference to map view interface. */
 	TScriptInterface<IGoogleMapsViewInterface> MapView;
 
+	/** Reference to last added marker interface. */
+	TScriptInterface<IMarkerInterface> LastAddedMarker;
+
 	/** 
 	* Flag indicating if there is existing map view (used to allow only one map view in demo level).
 	* Can be removed to allow creation of multiple map views.
@@ -54,4 +62,10 @@ private:
 	*/
 	UFUNCTION()
 	void OnMapViewReady();
+
+	/**
+	* Handle OnMapClick callback.
+	*/
+	UFUNCTION()
+	void OnMapViewClick(FLatLng latLng);
 };
