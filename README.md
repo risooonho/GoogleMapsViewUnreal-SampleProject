@@ -6,6 +6,11 @@ Join our [Discord server](https://discord.gg/SuJP9fY) and ask us anything!
 
 ### CHANGELOG
 
+## v.1.2.1
+
++ FIXED Marker icon setter issues
++ FIXED Deprecated engine API usages
+
 ## v.1.2.0
 
 + ADDED Get/Set functions for reading and modifying marker properties
